@@ -3,8 +3,10 @@ package pro.nandor.appthatchecklanguages
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -49,7 +51,11 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {
     val state = rememberWebViewState("https://example.com")
+    val state2 = rememberWebViewState("https://example.com")
+    val state3 = rememberWebViewState("https://der-artikel.de/")
     val navigator = rememberWebViewNavigator()
+    val navigator2 = rememberWebViewNavigator()
+    val navigator3 = rememberWebViewNavigator()
     val coroutineScope: CoroutineScope = rememberCoroutineScope()
 
     var job: Job? by remember { mutableStateOf(null) }
@@ -58,19 +64,9 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
     var word by remember { mutableStateOf("") }
 
     var tabIndex by remember { mutableStateOf(0) }
-    val tabs = listOf("Home", "About", "Settings")
+    val tabs = listOf("Wiktionary", "Tatoeba", "Artikel")
 
     Column() {
-        TextField(
-            value = word,
-            onValueChange = {
-                word = it
-                job?.cancel()
-                job = coroutineScope.launch {
-                    delay(1000) // Delay for 1 second
-                    navigator.loadUrl("https://en.wiktionary.org/wiki/$word")
-                }
-            })
         TabRow(selectedTabIndex = tabIndex) {
             tabs.forEachIndexed { index, title ->
                 Tab(text = { Text(title) },
@@ -80,11 +76,25 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
 
             }
         }
-        when(tabIndex){
-            0 -> WebView(state = state, navigator = navigator)
-            1 -> Text("Hi")
-            2 -> Text("Bye")
+        Box(modifier=Modifier.weight(1.0f)){
+            when (tabIndex) {
+                0 -> WebView(state = state, navigator = navigator)
+                1 -> WebView(state = state2, navigator = navigator2, onCreated = { it.settings.javaScriptEnabled = true })
+                2 -> WebView(state = state3, navigator = navigator3, onCreated = { it.settings.javaScriptEnabled = true })
+            }
+
         }
+        TextField(
+            value = word,
+            onValueChange = {
+                word = it
+                job?.cancel()
+                job = coroutineScope.launch {
+                    delay(1000) // Delay for 1 second
+                    navigator.loadUrl("https://en.wiktionary.org/wiki/$word")
+                    navigator2.loadUrl("https://tatoeba.org/en/sentences/search?from=&query=$word&to=")
+                }
+            })
     }
 }
 

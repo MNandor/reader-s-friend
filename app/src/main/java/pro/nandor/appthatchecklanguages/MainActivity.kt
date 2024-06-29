@@ -3,11 +3,16 @@ package pro.nandor.appthatchecklanguages
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Tab
@@ -21,7 +26,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.kevinnzou.web.WebView
 import com.kevinnzou.web.rememberWebViewNavigator
 import com.kevinnzou.web.rememberWebViewState
@@ -48,6 +55,7 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun Greeting(name: String, modifier: Modifier = Modifier) {
     val state = rememberWebViewState("https://example.com")
@@ -63,25 +71,37 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
 
     var word by remember { mutableStateOf("") }
 
-    var tabIndex by remember { mutableStateOf(0) }
     val tabs = listOf("Wiktionary", "Tatoeba", "Artikel")
 
+    var selectedTab by remember {
+        mutableStateOf(0)
+    }
+
+
     Column() {
-        TabRow(selectedTabIndex = tabIndex) {
+        TabRow(selectedTabIndex = selectedTab) {
             tabs.forEachIndexed { index, title ->
                 Tab(text = { Text(title) },
-                    selected = tabIndex == index,
-                    onClick = { tabIndex = index }
+                    selected = selectedTab == index,
+                    onClick = {
+                        selectedTab = index
+                    }
                 )
 
             }
         }
+
+        val visibleModifier = Modifier.fillMaxSize()
+        val invisibleModifier = Modifier.height(0.dp).width(0.dp).alpha(0.0f)
+
         Box(modifier=Modifier.weight(1.0f)){
-            when (tabIndex) {
-                0 -> WebView(state = state, navigator = navigator)
-                1 -> WebView(state = state2, navigator = navigator2, onCreated = { it.settings.javaScriptEnabled = true })
-                2 -> WebView(state = state3, navigator = navigator3, onCreated = { it.settings.javaScriptEnabled = true })
-            }
+                WebView(state = state, navigator = navigator,
+                    modifier = if (selectedTab == 0) visibleModifier else visibleModifier)
+                WebView(state = state2, navigator = navigator2, onCreated = { it.settings.javaScriptEnabled = true },
+                    modifier = if (selectedTab == 1) visibleModifier else invisibleModifier)
+                WebView(state = state3, navigator = navigator3, onCreated = { it.settings.javaScriptEnabled = true },
+                    modifier = if (selectedTab == 2) visibleModifier else invisibleModifier)
+
 
         }
         TextField(

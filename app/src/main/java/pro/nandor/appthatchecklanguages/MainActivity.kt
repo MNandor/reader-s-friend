@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Tab
+import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -54,6 +56,10 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
 
 
     var word by remember { mutableStateOf("") }
+
+    var tabIndex by remember { mutableStateOf(0) }
+    val tabs = listOf("Home", "About", "Settings")
+
     Column() {
         TextField(
             value = word,
@@ -65,7 +71,20 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
                     navigator.loadUrl("https://en.wiktionary.org/wiki/$word")
                 }
             })
-        WebView(state = state, navigator = navigator)
+        TabRow(selectedTabIndex = tabIndex) {
+            tabs.forEachIndexed { index, title ->
+                Tab(text = { Text(title) },
+                    selected = tabIndex == index,
+                    onClick = { tabIndex = index }
+                )
+
+            }
+        }
+        when(tabIndex){
+            0 -> WebView(state = state, navigator = navigator)
+            1 -> Text("Hi")
+            2 -> Text("Bye")
+        }
     }
 }
 

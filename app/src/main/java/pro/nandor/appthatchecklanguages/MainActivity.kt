@@ -22,6 +22,9 @@ import com.kevinnzou.web.WebView
 import com.kevinnzou.web.rememberWebViewNavigator
 import com.kevinnzou.web.rememberWebViewState
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import pro.nandor.appthatchecklanguages.ui.theme.AppThatChecksLanguagesTheme
 
 class MainActivity : ComponentActivity() {
@@ -47,11 +50,21 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
     val navigator = rememberWebViewNavigator()
     val coroutineScope: CoroutineScope = rememberCoroutineScope()
 
+    var job: Job? by remember { mutableStateOf(null) }
 
 
-    var word by remember{mutableStateOf("")}
-    Column(){
-        TextField(value = word, onValueChange = {word = it; navigator.loadUrl("https://en.wiktionary.org/wiki/$word")})
+    var word by remember { mutableStateOf("") }
+    Column() {
+        TextField(
+            value = word,
+            onValueChange = {
+                word = it
+                job?.cancel()
+                job = coroutineScope.launch {
+                    delay(1000) // Delay for 1 second
+                    navigator.loadUrl("https://en.wiktionary.org/wiki/$word")
+                }
+            })
         WebView(state = state, navigator = navigator)
     }
 }

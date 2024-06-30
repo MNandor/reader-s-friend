@@ -94,14 +94,14 @@ class MainViewModel: ViewModel() {
     }
 
     val websites = listOf<Website>(
-        Website("Wiktionary", "German", "https://en.wiktionary.org/wiki/<<word>>#German", true),
-        Website("Tatoeba", "German", "https://tatoeba.org/en/sentences/search?from=deu&query=<<word>>&to=eng", true),
-        Website("Artikel", "German", "https://der-artikel.de/", false),
-        Website("Verben", "German", "https://verben.org/konjugation/<<word>>", true),
-        Website("Deepl", "German", "https://www.deepl.com/en/translator#de/en/<<word>>", true),
+        Website("Wiktionary", "German", "https://en.wiktionary.org/wiki/<<word>>#German", true, "https://en.wiktionary.org/wiki/Wiktionary:Main_Page"),
+        Website("Tatoeba", "German", "https://tatoeba.org/en/sentences/search?from=deu&query=<<word>>&to=eng", true, "https://tatoeba.org/"),
+        Website("Artikel", "German", "https://der-artikel.de/", false, "https://der-artikel.de/"),
+        Website("Verben", "German", "https://verben.org/konjugation/<<word>>", true, "https://verben.org/"),
+        Website("Deepl", "German", "https://www.deepl.com/en/translator#de/en/<<word>>", true, "https://www.deepl.com/en/translator#de/en/"),
 
-        Website("Wiktionary", "Romanian", "https://en.wiktionary.org/wiki/<<word>>#Romanian", true),
-        Website("Tatoeba", "Romanian", "https://tatoeba.org/en/sentences/search?from=ron&query=<<word>>&to=eng", true)
+        Website("Wiktionary", "Romanian", "https://en.wiktionary.org/wiki/<<word>>#Romanian", true, "https://en.wiktionary.org/wiki/Wiktionary:Main_Page"),
+        Website("Tatoeba", "Romanian", "https://tatoeba.org/en/sentences/search?from=ron&query=<<word>>&to=eng", true, "https://tatoeba.org/en/sentences/search?from=ron&query=&to=eng")
     )
 
     var selectedLanguage by mutableStateOf("German")
@@ -113,6 +113,13 @@ class MainViewModel: ViewModel() {
 
     val filteredWebsites by derivedStateOf {
         websites.filter { it.language == selectedLanguage }
+    }
+
+    var wordThatWebsitesShouldSearchFor by mutableStateOf("")
+        private set
+
+    fun setWordForWebsiteSearch(word: String){
+        wordThatWebsitesShouldSearchFor = word
     }
 
 }

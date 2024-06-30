@@ -80,16 +80,7 @@ class MainActivity : ComponentActivity() {
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun Greeting(name: String, viewModel: MainViewModel) {
-    val state = rememberWebViewState("https://example.com")
-    val state2 = rememberWebViewState("https://example.com")
-    val state3 = rememberWebViewState("https://der-artikel.de/")
-    val state4 = rememberWebViewState("https://verben.org/")
-    val state5 = rememberWebViewState("https://www.deepl.com/en/translator")
-    val navigator = rememberWebViewNavigator()
-    val navigator2 = rememberWebViewNavigator()
-    val navigator3 = rememberWebViewNavigator()
-    val navigator4 = rememberWebViewNavigator()
-    val navigator5 = rememberWebViewNavigator()
+
     val coroutineScope: CoroutineScope = rememberCoroutineScope()
 
     var job: Job? by remember { mutableStateOf(null) }
@@ -97,7 +88,7 @@ fun Greeting(name: String, viewModel: MainViewModel) {
 
     var word by remember { mutableStateOf("") }
 
-    val tabs = listOf("Wiktionary", "Tatoeba", "Artikel", "Verben", "DeepL", "History")
+    val tabs = viewModel.filteredWebsites.map { it.displayName } + listOf("History")
 
     var selectedTab by remember {
         mutableStateOf(0)
@@ -117,24 +108,11 @@ fun Greeting(name: String, viewModel: MainViewModel) {
                 }
             }
 
-            val visibleModifier = Modifier.fillMaxSize()
-            val invisibleModifier = Modifier
-                .height(0.dp)
-                .width(0.dp)
-                .alpha(0.0f)
 
             Box(modifier=Modifier.weight(1.0f)){
-                WebView(state = state, navigator = navigator,
-                    modifier = if (selectedTab == 0) visibleModifier else invisibleModifier)
-                WebView(state = state2, navigator = navigator2, onCreated = { it.settings.javaScriptEnabled = true },
-                    modifier = if (selectedTab == 1) visibleModifier else invisibleModifier)
-                WebView(state = state3, navigator = navigator3, onCreated = { it.settings.javaScriptEnabled = true },
-                    modifier = if (selectedTab == 2) visibleModifier else invisibleModifier)
-                WebView(state = state4, navigator = navigator4, onCreated = { it.settings.javaScriptEnabled = true },
-                    modifier = if (selectedTab == 3) visibleModifier else invisibleModifier)
-                WebView(state = state5, navigator = navigator5, onCreated = { it.settings.javaScriptEnabled = true },
-                    modifier = if (selectedTab == 4) visibleModifier else invisibleModifier)
-            
+                for((index, website) in viewModel.filteredWebsites.withIndex()){
+                    OneWebsiteTab(viewModel, website, selectedTab == index )
+                }
                 
                 if (selectedTab == 5){
                     ListOfPastWords(viewModel = viewModel)
@@ -153,10 +131,10 @@ fun Greeting(name: String, viewModel: MainViewModel) {
                         job?.cancel()
                         job = coroutineScope.launch {
                             delay(1000) // Delay for 1 second
-                            navigator.loadUrl("https://en.wiktionary.org/wiki/$word#German")
-                            navigator2.loadUrl("https://tatoeba.org/en/sentences/search?from=deu&query=$word&to=eng")
-                            navigator4.loadUrl("https://verben.org/konjugation/$word")
-                            navigator5.loadUrl("https://www.deepl.com/en/translator#de/en/$word")
+//                            navigator2.loadUrl("https://tatoeba.org/en/sentences/search?from=deu&query=$word&to=eng")
+//                            navigator4.loadUrl("https://verben.org/konjugation/$word")
+//                            navigator5.loadUrl("https://www.deepl.com/en/translator#de/en/$word")
+                            viewModel.setWordForWebsiteSearch(word)
                         }
                     },
                     modifier = Modifier.weight(1.0f)
@@ -299,4 +277,31 @@ fun LanguagePickerDialog(viewModel: MainViewModel){
             }
         }
     }
+}
+
+@Composable
+fun OneWebsiteTab(viewModel: MainViewModel, website: Website, visible: Boolean){
+    val state = rememberWebViewState(website.baseURL)
+    val navigator = rememberWebViewNavigator()
+
+    var lastWord by remember{mutableStateOf("")}
+
+    val currentWord = viewModel.wordThatWebsitesShouldSearchFor
+
+    if (currentWord != lastWord){
+        lastWord = currentWord
+        if (website.shouldRefreshOnWordChange)
+            navigator.loadUrl(website.urlWithOptionalPlaceholder.replace("<<word>>", currentWord))
+
+    }
+
+    val visibleModifier = Modifier.fillMaxSize()
+    val invisibleModifier = Modifier
+        .height(0.dp)
+        .width(0.dp)
+        .alpha(0.0f)
+
+    WebView(state = state, navigator = navigator,
+        modifier = if (visible) visibleModifier else invisibleModifier,
+        onCreated = { it.settings.javaScriptEnabled = true })
 }

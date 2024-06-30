@@ -5,4 +5,5 @@ data class Website(
     val language: String,
     val urlWithOptionalPlaceholder:String,
     val shouldRefreshOnWordChange: Boolean,
+    val baseURL: String,
 )

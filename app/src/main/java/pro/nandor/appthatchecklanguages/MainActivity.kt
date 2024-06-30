@@ -202,7 +202,7 @@ fun AddPopup(viewModel: MainViewModel, word: String){
                 .fillMaxWidth()
         ){
             Column(modifier = Modifier.padding(16.dp)){
-                Text("German")
+                Text(viewModel.selectedLanguage)
                 TextField(value = viewModel.source, onValueChange = {viewModel.writeSource(it)}, placeholder = {Text("Source...", modifier = Modifier.alpha(0.25f))})
                 Spacer(modifier = Modifier.height(16.dp))
                 TextField(value = customWord, onValueChange = {customWord = it}, placeholder = {Text("Word...", modifier = Modifier.alpha(0.25f))})

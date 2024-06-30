@@ -94,6 +94,9 @@ fun Greeting(name: String, viewModel: MainViewModel) {
         mutableStateOf(0)
     }
 
+    if (selectedTab >= tabs.size)
+        selectedTab = 0
+
     Surface {
         Column() {
             ScrollableTabRow(selectedTabIndex = selectedTab) {

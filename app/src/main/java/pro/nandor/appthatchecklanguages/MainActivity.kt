@@ -117,7 +117,7 @@ fun Greeting(name: String, viewModel: MainViewModel) {
                     OneWebsiteTab(viewModel, website, selectedTab == index )
                 }
                 
-                if (selectedTab == 5){
+                if (selectedTab == tabs.size-1){
                     ListOfPastWords(viewModel = viewModel)
                 }
 

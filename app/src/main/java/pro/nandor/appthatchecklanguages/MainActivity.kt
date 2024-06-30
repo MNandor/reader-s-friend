@@ -234,7 +234,7 @@ fun AddPopup(viewModel: MainViewModel, word: String){
                 Spacer(modifier = Modifier.height(32.dp))
                 Button(onClick = {
                      viewModel.saveWord(
-                         language = "german",
+                         language = viewModel.selectedLanguage,
                          foreignWord = customWord,
                          englishWord = customTranslation,
                          foreignContext = when(radioSelection){

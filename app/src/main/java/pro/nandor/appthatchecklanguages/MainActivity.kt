@@ -52,6 +52,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import pro.nandor.appthatchecklanguages.tabs.ListOfPastWords
 import pro.nandor.appthatchecklanguages.ui.theme.AppThatChecksLanguagesTheme
 
 class MainActivity : ComponentActivity() {
@@ -80,9 +81,13 @@ fun Greeting(name: String, viewModel: MainViewModel) {
     val state = rememberWebViewState("https://example.com")
     val state2 = rememberWebViewState("https://example.com")
     val state3 = rememberWebViewState("https://der-artikel.de/")
+    val state4 = rememberWebViewState("https://verben.org/")
+    val state5 = rememberWebViewState("https://www.deepl.com/en/translator")
     val navigator = rememberWebViewNavigator()
     val navigator2 = rememberWebViewNavigator()
     val navigator3 = rememberWebViewNavigator()
+    val navigator4 = rememberWebViewNavigator()
+    val navigator5 = rememberWebViewNavigator()
     val coroutineScope: CoroutineScope = rememberCoroutineScope()
 
     var job: Job? by remember { mutableStateOf(null) }
@@ -123,6 +128,10 @@ fun Greeting(name: String, viewModel: MainViewModel) {
                     modifier = if (selectedTab == 1) visibleModifier else invisibleModifier)
                 WebView(state = state3, navigator = navigator3, onCreated = { it.settings.javaScriptEnabled = true },
                     modifier = if (selectedTab == 2) visibleModifier else invisibleModifier)
+                WebView(state = state4, navigator = navigator4, onCreated = { it.settings.javaScriptEnabled = true },
+                    modifier = if (selectedTab == 3) visibleModifier else invisibleModifier)
+                WebView(state = state5, navigator = navigator5, onCreated = { it.settings.javaScriptEnabled = true },
+                    modifier = if (selectedTab == 4) visibleModifier else invisibleModifier)
             
                 
                 if (selectedTab == 5){
@@ -144,6 +153,8 @@ fun Greeting(name: String, viewModel: MainViewModel) {
                             delay(1000) // Delay for 1 second
                             navigator.loadUrl("https://en.wiktionary.org/wiki/$word")
                             navigator2.loadUrl("https://tatoeba.org/en/sentences/search?from=&query=$word&to=")
+                            navigator4.loadUrl("https://verben.org/konjugation/$word")
+                            navigator5.loadUrl("https://www.deepl.com/en/translator#de/en/$word")
                         }
                     },
                     modifier = Modifier.weight(1.0f)
@@ -238,16 +249,6 @@ fun AddPopup(viewModel: MainViewModel, word: String){
                 }
 
             }
-        }
-    }
-}
-
-@Composable
-fun ListOfPastWords(viewModel: MainViewModel){
-    val words by viewModel.words.collectAsState()
-    LazyColumn(modifier = Modifier.fillMaxSize()){
-        items(words){
-            Text("${it.foreignWord} - ${it.englishWord}")
         }
     }
 }

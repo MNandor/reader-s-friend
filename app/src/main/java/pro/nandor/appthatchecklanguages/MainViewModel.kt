@@ -5,6 +5,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import io.realm.kotlin.ext.query
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
 class MainViewModel: ViewModel() {
@@ -45,5 +49,21 @@ class MainViewModel: ViewModel() {
 
         addWordToRealm(lexeme)
 
+    }
+
+    val words = realm
+        .query<Lexeme>()
+        .asFlow()
+        .map { results ->
+            results.list.toList()
+        }
+        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList()
+        )
+
+    var showPastWords by mutableStateOf(false)
+        private set
+
+    fun switchToPastWords(){
+        showPastWords = true
     }
 }

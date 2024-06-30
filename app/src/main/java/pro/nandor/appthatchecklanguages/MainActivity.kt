@@ -166,7 +166,9 @@ fun AddPopup(viewModel: MainViewModel, word: String){
     var radioSelection by remember{ mutableStateOf(2) }
 
 
-
+    var customContextSentence by remember {
+        mutableStateOf("")
+    }
 
 
     Dialog(onDismissRequest = {viewModel.hidePopup()}){
@@ -197,7 +199,7 @@ fun AddPopup(viewModel: MainViewModel, word: String){
                     verticalAlignment = Alignment.CenterVertically
                 ){
                     RadioButton(selected = radioSelection == 2, onClick = { radioSelection = 2 })
-                    TextField(value = "jumps over", onValueChange = {})
+                    TextField(value = customContextSentence, onValueChange = {customContextSentence = it}, placeholder = {Text("Context Sentence...", modifier = Modifier.alpha(0.25f))})
 
                 }
                 Spacer(modifier = Modifier.height(16.dp))

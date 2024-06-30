@@ -32,6 +32,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import com.kevinnzou.web.WebView
 import com.kevinnzou.web.rememberWebViewNavigator
 import com.kevinnzou.web.rememberWebViewState
@@ -44,6 +45,9 @@ import pro.nandor.appthatchecklanguages.ui.theme.AppThatChecksLanguagesTheme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val viewModel: MainViewModel = MainViewModel()
+
         setContent {
             AppThatChecksLanguagesTheme {
                 // A surface container using the 'background' color from the theme
@@ -51,7 +55,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Greeting("Android")
+                    Greeting("Android", viewModel)
                 }
             }
         }
@@ -60,7 +64,7 @@ class MainActivity : ComponentActivity() {
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
+fun Greeting(name: String, viewModel: MainViewModel) {
     val state = rememberWebViewState("https://example.com")
     val state2 = rememberWebViewState("https://example.com")
     val state3 = rememberWebViewState("https://der-artikel.de/")
@@ -80,68 +84,73 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
         mutableStateOf(0)
     }
 
+    Surface {
+        Column() {
+            TabRow(selectedTabIndex = selectedTab) {
+                tabs.forEachIndexed { index, title ->
+                    Tab(text = { Text(title) },
+                        selected = selectedTab == index,
+                        onClick = {
+                            selectedTab = index
+                        }
+                    )
 
-    Column() {
-        TabRow(selectedTabIndex = selectedTab) {
-            tabs.forEachIndexed { index, title ->
-                Tab(text = { Text(title) },
-                    selected = selectedTab == index,
-                    onClick = {
-                        selectedTab = index
-                    }
+                }
+            }
+
+            val visibleModifier = Modifier.fillMaxSize()
+            val invisibleModifier = Modifier
+                .height(0.dp)
+                .width(0.dp)
+                .alpha(0.0f)
+
+            Box(modifier=Modifier.weight(1.0f)){
+                    WebView(state = state, navigator = navigator,
+                        modifier = if (selectedTab == 0) visibleModifier else visibleModifier)
+                    WebView(state = state2, navigator = navigator2, onCreated = { it.settings.javaScriptEnabled = true },
+                        modifier = if (selectedTab == 1) visibleModifier else invisibleModifier)
+                    WebView(state = state3, navigator = navigator3, onCreated = { it.settings.javaScriptEnabled = true },
+                        modifier = if (selectedTab == 2) visibleModifier else invisibleModifier)
+
+
+            }
+
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ){
+                TextField(
+                    value = word,
+                    onValueChange = {
+                        word = it
+                        job?.cancel()
+                        job = coroutineScope.launch {
+                            delay(1000) // Delay for 1 second
+                            navigator.loadUrl("https://en.wiktionary.org/wiki/$word")
+                            navigator2.loadUrl("https://tatoeba.org/en/sentences/search?from=&query=$word&to=")
+                        }
+                    },
+                    modifier = Modifier.weight(1.0f)
                 )
+                Button(
+                    onClick = {
+                        viewModel.showPopup()
+                    },
+                    modifier = Modifier.padding(horizontal = 8.dp)
 
+                ) {
+                    Text("Done")
+                }
             }
         }
 
-        val visibleModifier = Modifier.fillMaxSize()
-        val invisibleModifier = Modifier
-            .height(0.dp)
-            .width(0.dp)
-            .alpha(0.0f)
-
-        Box(modifier=Modifier.weight(1.0f)){
-                WebView(state = state, navigator = navigator,
-                    modifier = if (selectedTab == 0) visibleModifier else visibleModifier)
-                WebView(state = state2, navigator = navigator2, onCreated = { it.settings.javaScriptEnabled = true },
-                    modifier = if (selectedTab == 1) visibleModifier else invisibleModifier)
-                WebView(state = state3, navigator = navigator3, onCreated = { it.settings.javaScriptEnabled = true },
-                    modifier = if (selectedTab == 2) visibleModifier else invisibleModifier)
-
-
-        }
-
-        Row(
-            verticalAlignment = Alignment.CenterVertically
-        ){
-            TextField(
-                value = word,
-                onValueChange = {
-                    word = it
-                    job?.cancel()
-                    job = coroutineScope.launch {
-                        delay(1000) // Delay for 1 second
-                        navigator.loadUrl("https://en.wiktionary.org/wiki/$word")
-                        navigator2.loadUrl("https://tatoeba.org/en/sentences/search?from=&query=$word&to=")
-                    }
-                },
-                modifier = Modifier.weight(1.0f)
-            )
-            Button(
-                onClick = { /*TODO*/ },
-                modifier = Modifier.padding(horizontal = 8.dp)
-
-            ) {
-                Text("Done")
-            }
-        }
+        AddPopup(viewModel = viewModel)
     }
 }
-
-@Preview(showBackground = true)
 @Composable
-fun GreetingPreview() {
-    AppThatChecksLanguagesTheme {
-        Greeting("Android")
+fun AddPopup(viewModel: MainViewModel){
+    if (!viewModel.popupVisible)
+        return
+    Dialog(onDismissRequest = {viewModel.hidePopup()}){
+        Text("Hi")
     }
 }

@@ -60,4 +60,11 @@ class MainViewModel: ViewModel() {
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList()
         )
 
+    var source by mutableStateOf("")
+        private set
+
+    fun writeSource(source: String){
+        this.source = source
+    }
+
 }

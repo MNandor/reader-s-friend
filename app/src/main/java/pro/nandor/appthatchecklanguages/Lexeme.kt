@@ -12,4 +12,5 @@ class Lexeme: RealmObject{
     var englishWord: String = ""
     var foreignContext: String = ""
     var exportTimeStamp: Int = 0
+    var source: String = ""
 }

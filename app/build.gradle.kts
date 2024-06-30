@@ -68,4 +68,5 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
     implementation("io.github.kevinnzou:compose-webview:0.33.6")
+    implementation("io.realm.kotlin:library-base:1.11.0")
 }

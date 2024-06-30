@@ -35,6 +35,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -156,6 +158,10 @@ fun AddPopup(viewModel: MainViewModel){
     if (!viewModel.popupVisible)
         return
 
+    val clipboardManager = LocalClipboardManager.current
+    val clipboardText = clipboardManager.getText()?.text?:""
+
+
     Dialog(onDismissRequest = {viewModel.hidePopup()}){
         Card(
             modifier = Modifier
@@ -170,13 +176,13 @@ fun AddPopup(viewModel: MainViewModel){
                     verticalAlignment = Alignment.CenterVertically
                 ){
                     RadioButton(selected = true, onClick = { /*TODO*/ })
-                    Text("The quick brown fox")
+                    Text(clipboardText)
                 }
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ){
                     RadioButton(selected = true, onClick = { /*TODO*/ })
-                    Text("The quick brown fox")
+                    Text(clipboardText)
                 }
                 Row(
                     verticalAlignment = Alignment.CenterVertically

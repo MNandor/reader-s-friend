@@ -52,6 +52,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import pro.nandor.appthatchecklanguages.tabs.LexemeOnScreen
 import pro.nandor.appthatchecklanguages.tabs.ListOfPastWords
 import pro.nandor.appthatchecklanguages.ui.theme.AppThatChecksLanguagesTheme
 
@@ -163,16 +164,28 @@ fun Greeting(name: String, viewModel: MainViewModel) {
                     onClick = {
                         viewModel.showPopup()
                     },
+
                     modifier = Modifier
                         .padding(horizontal = 8.dp)
 
                 ) {
-                    Text("Done")
+                    Text("Done",
+                        modifier = Modifier.combinedClickable (
+                            onClick = {
+                                viewModel.showPopup()
+                            },
+                            onLongClick = {
+                                // todo this should not be here
+                                viewModel.showLanguageSelectorDialog(true)
+                            }
+                        )
+                    )
                 }
             }
         }
 
         AddPopup(viewModel = viewModel, word = word)
+        LanguagePickerDialog(viewModel = viewModel)
     }
 }
 @Composable
@@ -255,6 +268,27 @@ fun AddPopup(viewModel: MainViewModel, word: String){
                     Text("Save!")
                 }
 
+            }
+        }
+    }
+}
+
+@Composable
+fun LanguagePickerDialog(viewModel: MainViewModel){
+    if (!viewModel.showLanguageSelectorDialog)
+        return
+
+
+    Dialog(onDismissRequest = {viewModel.showLanguageSelectorDialog(false)}) {
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight(0.6f)
+        ) {
+            LazyColumn(modifier = Modifier.fillMaxSize()){
+                items(viewModel.websites.map { it.language }.toSet().toList()){
+                    Text(it)
+                }
             }
         }
     }

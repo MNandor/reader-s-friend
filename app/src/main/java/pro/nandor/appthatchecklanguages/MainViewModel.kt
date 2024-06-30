@@ -85,4 +85,22 @@ class MainViewModel: ViewModel() {
     var lexemeToBeDeleted:Lexeme? by mutableStateOf(null)
         private set
 
+    var showLanguageSelectorDialog by mutableStateOf(false)
+        private set
+
+    fun showLanguageSelectorDialog(shouldShow: Boolean){
+        showLanguageSelectorDialog = shouldShow
+    }
+
+    val websites = listOf<Website>(
+        Website("Wiktionary", "German", "https://en.wiktionary.org/wiki/<<word>>#German", true),
+        Website("Tatoeba", "German", "https://tatoeba.org/en/sentences/search?from=deu&query=<<word>>&to=eng", true),
+        Website("Artikel", "German", "https://der-artikel.de/", false),
+        Website("Verben", "German", "https://verben.org/konjugation/<<word>>", true),
+        Website("Deepl", "German", "https://www.deepl.com/en/translator#de/en/<<word>>", true),
+
+        Website("Wiktionary", "Romanian", "https://en.wiktionary.org/wiki/<<word>>#Romanian", true),
+        Website("Tatoeba", "Romanian", "https://tatoeba.org/en/sentences/search?from=ron&query=<<word>>&to=eng", true)
+    )
+
 }

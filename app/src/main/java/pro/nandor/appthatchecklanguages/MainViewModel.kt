@@ -1,6 +1,7 @@
 package pro.nandor.appthatchecklanguages
 
 import androidx.compose.runtime.State
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -102,5 +103,16 @@ class MainViewModel: ViewModel() {
         Website("Wiktionary", "Romanian", "https://en.wiktionary.org/wiki/<<word>>#Romanian", true),
         Website("Tatoeba", "Romanian", "https://tatoeba.org/en/sentences/search?from=ron&query=<<word>>&to=eng", true)
     )
+
+    var selectedLanguage by mutableStateOf("German")
+        private set
+
+    fun selectLanguage(language: String){
+        selectedLanguage = language
+    }
+
+    val filteredWebsites by derivedStateOf {
+        websites.filter { it.language == selectedLanguage }
+    }
 
 }

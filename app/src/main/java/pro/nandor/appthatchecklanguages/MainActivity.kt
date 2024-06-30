@@ -29,6 +29,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -287,7 +288,13 @@ fun LanguagePickerDialog(viewModel: MainViewModel){
         ) {
             LazyColumn(modifier = Modifier.fillMaxSize()){
                 items(viewModel.websites.map { it.language }.toSet().toList()){
-                    Text(it)
+                    TextButton(onClick = {
+                        viewModel.selectLanguage(it)
+                        viewModel.showLanguageSelectorDialog(false)
+                    }) {
+                        Text(it)
+
+                    }
                 }
             }
         }

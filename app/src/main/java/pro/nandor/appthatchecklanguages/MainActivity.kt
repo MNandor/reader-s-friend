@@ -170,6 +170,14 @@ fun AddPopup(viewModel: MainViewModel, word: String){
         mutableStateOf("")
     }
 
+    var customTranslation by remember {
+        mutableStateOf("")
+    }
+
+    var customWord by remember {
+        mutableStateOf(word)
+    }
+
 
     Dialog(onDismissRequest = {viewModel.hidePopup()}){
         Card(
@@ -179,7 +187,7 @@ fun AddPopup(viewModel: MainViewModel, word: String){
             Column(modifier = Modifier.padding(16.dp)){
                 Text("German")
                 Spacer(modifier = Modifier.height(16.dp))
-                TextField(value = "hi", onValueChange = {})
+                TextField(value = customWord, onValueChange = {customWord = it}, placeholder = {Text("Word...", modifier = Modifier.alpha(0.25f))})
                 Spacer(modifier = Modifier.height(16.dp))
                 if (clipboardText != null)
                     Row(
@@ -203,7 +211,7 @@ fun AddPopup(viewModel: MainViewModel, word: String){
 
                 }
                 Spacer(modifier = Modifier.height(16.dp))
-                TextField(value = "translation", onValueChange = {})
+                TextField(value = customTranslation, onValueChange = {customTranslation = it}, placeholder = {Text("Translation...", modifier = Modifier.alpha(0.25f))})
 
                 Spacer(modifier = Modifier.height(32.dp))
                 Button(onClick = {}, modifier = Modifier.fillMaxWidth()){

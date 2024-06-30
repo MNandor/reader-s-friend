@@ -60,10 +60,4 @@ class MainViewModel: ViewModel() {
         .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList()
         )
 
-    var showPastWords by mutableStateOf(false)
-        private set
-
-    fun switchToPastWords(){
-        showPastWords = true
-    }
 }

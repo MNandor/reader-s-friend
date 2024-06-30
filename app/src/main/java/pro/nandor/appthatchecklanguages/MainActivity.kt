@@ -24,6 +24,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
+import androidx.compose.material3.ScrollableTabRow
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
@@ -66,10 +67,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    if (viewModel.showPastWords){
-                        ListOfPastWords(viewModel = viewModel)
-                    } else 
-                        Greeting("Android", viewModel)
+                    Greeting("Android", viewModel)
                 }
             }
         }
@@ -92,7 +90,7 @@ fun Greeting(name: String, viewModel: MainViewModel) {
 
     var word by remember { mutableStateOf("") }
 
-    val tabs = listOf("Wiktionary", "Tatoeba", "Artikel")
+    val tabs = listOf("Wiktionary", "Tatoeba", "Artikel", "Verben", "DeepL", "History")
 
     var selectedTab by remember {
         mutableStateOf(0)
@@ -100,7 +98,7 @@ fun Greeting(name: String, viewModel: MainViewModel) {
 
     Surface {
         Column() {
-            TabRow(selectedTabIndex = selectedTab) {
+            ScrollableTabRow(selectedTabIndex = selectedTab) {
                 tabs.forEachIndexed { index, title ->
                     Tab(text = { Text(title) },
                         selected = selectedTab == index,
@@ -119,12 +117,17 @@ fun Greeting(name: String, viewModel: MainViewModel) {
                 .alpha(0.0f)
 
             Box(modifier=Modifier.weight(1.0f)){
-                    WebView(state = state, navigator = navigator,
-                        modifier = if (selectedTab == 0) visibleModifier else visibleModifier)
-                    WebView(state = state2, navigator = navigator2, onCreated = { it.settings.javaScriptEnabled = true },
-                        modifier = if (selectedTab == 1) visibleModifier else invisibleModifier)
-                    WebView(state = state3, navigator = navigator3, onCreated = { it.settings.javaScriptEnabled = true },
-                        modifier = if (selectedTab == 2) visibleModifier else invisibleModifier)
+                WebView(state = state, navigator = navigator,
+                    modifier = if (selectedTab == 0) visibleModifier else invisibleModifier)
+                WebView(state = state2, navigator = navigator2, onCreated = { it.settings.javaScriptEnabled = true },
+                    modifier = if (selectedTab == 1) visibleModifier else invisibleModifier)
+                WebView(state = state3, navigator = navigator3, onCreated = { it.settings.javaScriptEnabled = true },
+                    modifier = if (selectedTab == 2) visibleModifier else invisibleModifier)
+            
+                
+                if (selectedTab == 5){
+                    ListOfPastWords(viewModel = viewModel)
+                }
 
 
             }
@@ -147,7 +150,7 @@ fun Greeting(name: String, viewModel: MainViewModel) {
                 )
                 Button(
                     onClick = {
-                        viewModel.switchToPastWords()
+                        viewModel.showPopup()
                     },
                     modifier = Modifier
                         .padding(horizontal = 8.dp)
@@ -229,6 +232,7 @@ fun AddPopup(viewModel: MainViewModel, word: String){
                          englishWord = customTranslation,
                          foreignContext = customContextSentence
                      )
+                    viewModel.hidePopup()
                 }, modifier = Modifier.fillMaxWidth()){
                     Text("Save!")
                 }

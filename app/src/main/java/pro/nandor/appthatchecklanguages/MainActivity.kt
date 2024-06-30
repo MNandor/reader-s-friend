@@ -150,16 +150,20 @@ fun Greeting(name: String, viewModel: MainViewModel) {
             }
         }
 
-        AddPopup(viewModel = viewModel)
+        AddPopup(viewModel = viewModel, word = word)
     }
 }
 @Composable
-fun AddPopup(viewModel: MainViewModel){
+fun AddPopup(viewModel: MainViewModel, word: String){
     if (!viewModel.popupVisible)
         return
 
     val clipboardManager = LocalClipboardManager.current
-    val clipboardText = clipboardManager.getText()?.text?:""
+    val clipboardText = clipboardManager.getText()?.text
+
+    val highlightedText = if (clipboardText?.contains(word, ignoreCase = true) == true) clipboardText.replace(word.toRegex(RegexOption.IGNORE_CASE), {"<b>${it.value}</b>"}) else null
+
+    var radioSelection by remember{ mutableStateOf(0) }
 
 
     Dialog(onDismissRequest = {viewModel.hidePopup()}){
@@ -172,22 +176,24 @@ fun AddPopup(viewModel: MainViewModel){
                 Spacer(modifier = Modifier.height(16.dp))
                 TextField(value = "hi", onValueChange = {})
                 Spacer(modifier = Modifier.height(16.dp))
+                if (clipboardText != null)
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ){
+                        RadioButton(selected = radioSelection == 0, onClick = { radioSelection = 0 })
+                        Text(clipboardText)
+                    }
+                if (highlightedText != null)
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically
+                    ){
+                        RadioButton(selected = radioSelection == 1, onClick = { radioSelection = 1 })
+                        Text(highlightedText)
+                    }
                 Row(
                     verticalAlignment = Alignment.CenterVertically
                 ){
-                    RadioButton(selected = true, onClick = { /*TODO*/ })
-                    Text(clipboardText)
-                }
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ){
-                    RadioButton(selected = true, onClick = { /*TODO*/ })
-                    Text(clipboardText)
-                }
-                Row(
-                    verticalAlignment = Alignment.CenterVertically
-                ){
-                    RadioButton(selected = false, onClick = { /*TODO*/ })
+                    RadioButton(selected = radioSelection == 2, onClick = { radioSelection = 2 })
                     TextField(value = "jumps over", onValueChange = {})
 
                 }

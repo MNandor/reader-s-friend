@@ -161,9 +161,12 @@ fun AddPopup(viewModel: MainViewModel, word: String){
     val clipboardManager = LocalClipboardManager.current
     val clipboardText = clipboardManager.getText()?.text
 
-    val highlightedText = if (clipboardText?.contains(word, ignoreCase = true) == true) clipboardText.replace(word.toRegex(RegexOption.IGNORE_CASE), {"<b>${it.value}</b>"}) else null
+    val highlightedText = if (clipboardText?.contains(word, ignoreCase = true) == true && word.isNotEmpty()) clipboardText.replace(word.toRegex(RegexOption.IGNORE_CASE), {"<b>${it.value}</b>"}) else null
 
-    var radioSelection by remember{ mutableStateOf(0) }
+    var radioSelection by remember{ mutableStateOf(2) }
+
+
+
 
 
     Dialog(onDismissRequest = {viewModel.hidePopup()}){

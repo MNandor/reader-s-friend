@@ -151,7 +151,7 @@ fun Greeting(name: String, viewModel: MainViewModel) {
                         job?.cancel()
                         job = coroutineScope.launch {
                             delay(1000) // Delay for 1 second
-                            navigator.loadUrl("https://en.wiktionary.org/wiki/$word")
+                            navigator.loadUrl("https://en.wiktionary.org/wiki/$word#German")
                             navigator2.loadUrl("https://tatoeba.org/en/sentences/search?from=&query=$word&to=")
                             navigator4.loadUrl("https://verben.org/konjugation/$word")
                             navigator5.loadUrl("https://www.deepl.com/en/translator#de/en/$word")
@@ -242,7 +242,13 @@ fun AddPopup(viewModel: MainViewModel, word: String){
                          language = "german",
                          foreignWord = customWord,
                          englishWord = customTranslation,
-                         foreignContext = customContextSentence
+                         foreignContext = when(radioSelection){
+                             0 -> clipboardText
+                             1 -> highlightedText
+                             2 -> customContextSentence
+                             else -> ""
+                         }?:""
+
                      )
                     viewModel.hidePopup()
                 }, modifier = Modifier.fillMaxWidth()){

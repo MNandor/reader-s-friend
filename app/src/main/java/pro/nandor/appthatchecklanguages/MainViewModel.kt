@@ -67,4 +67,14 @@ class MainViewModel: ViewModel() {
         this.source = source
     }
 
+    fun deleteLexeme(lexeme: Lexeme){
+        viewModelScope.launch {
+            realm.write {
+                val lexemeToDelete = findLatest(lexeme)
+                if (lexemeToDelete != null)
+                    delete(lexemeToDelete)
+            }
+        }
+    }
+
 }

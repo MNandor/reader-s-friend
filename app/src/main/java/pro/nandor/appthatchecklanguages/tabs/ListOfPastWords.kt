@@ -1,5 +1,7 @@
 package pro.nandor.appthatchecklanguages.tabs
 
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -24,19 +26,33 @@ import pro.nandor.appthatchecklanguages.MainViewModel
 @Composable
 fun ListOfPastWords(viewModel: MainViewModel){
     val words by viewModel.words.collectAsState()
+
+    val callBack:(Lexeme) -> Unit = {it:Lexeme ->
+        viewModel.deleteLexeme(it)
+    }
+
     LazyColumn(modifier = Modifier.fillMaxSize()){
         items(words){
-            LexemeOnScreen(lexeme = it)
+            LexemeOnScreen(lexeme = it, callBack)
         }
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun LexemeOnScreen(lexeme: Lexeme){
+fun LexemeOnScreen(lexeme: Lexeme, callBack: (Lexeme) -> Unit){
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
+            .combinedClickable (
+                onClick = {
+
+                },
+                onLongClick = {
+                    callBack(lexeme)
+                }
+            )
     ){
         Column(modifier = Modifier.fillMaxWidth().padding(8.dp)){
             Row(horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()){
@@ -61,5 +77,5 @@ fun PreviewLexeme(){
         this.exportTimeStamp = 0
     }
 
-    LexemeOnScreen(lexeme = lexeme)
+    LexemeOnScreen(lexeme = lexeme, {})
 }

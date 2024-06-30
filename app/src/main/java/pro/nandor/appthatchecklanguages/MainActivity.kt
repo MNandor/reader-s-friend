@@ -10,9 +10,11 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Tab
@@ -25,6 +27,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.tooling.preview.Preview
@@ -92,7 +95,10 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
         }
 
         val visibleModifier = Modifier.fillMaxSize()
-        val invisibleModifier = Modifier.height(0.dp).width(0.dp).alpha(0.0f)
+        val invisibleModifier = Modifier
+            .height(0.dp)
+            .width(0.dp)
+            .alpha(0.0f)
 
         Box(modifier=Modifier.weight(1.0f)){
                 WebView(state = state, navigator = navigator,
@@ -104,17 +110,31 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
 
 
         }
-        TextField(
-            value = word,
-            onValueChange = {
-                word = it
-                job?.cancel()
-                job = coroutineScope.launch {
-                    delay(1000) // Delay for 1 second
-                    navigator.loadUrl("https://en.wiktionary.org/wiki/$word")
-                    navigator2.loadUrl("https://tatoeba.org/en/sentences/search?from=&query=$word&to=")
-                }
-            })
+
+        Row(
+            verticalAlignment = Alignment.CenterVertically
+        ){
+            TextField(
+                value = word,
+                onValueChange = {
+                    word = it
+                    job?.cancel()
+                    job = coroutineScope.launch {
+                        delay(1000) // Delay for 1 second
+                        navigator.loadUrl("https://en.wiktionary.org/wiki/$word")
+                        navigator2.loadUrl("https://tatoeba.org/en/sentences/search?from=&query=$word&to=")
+                    }
+                },
+                modifier = Modifier.weight(1.0f)
+            )
+            Button(
+                onClick = { /*TODO*/ },
+                modifier = Modifier.padding(horizontal = 8.dp)
+
+            ) {
+                Text("Done")
+            }
+        }
     }
 }
 

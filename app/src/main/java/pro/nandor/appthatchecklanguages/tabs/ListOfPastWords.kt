@@ -13,13 +13,17 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Card
+import androidx.compose.material3.ElevatedCard
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import pro.nandor.appthatchecklanguages.Lexeme
 import pro.nandor.appthatchecklanguages.MainViewModel
 
@@ -28,13 +32,16 @@ fun ListOfPastWords(viewModel: MainViewModel){
     val words by viewModel.words.collectAsState()
 
     val callBack:(Lexeme) -> Unit = {it:Lexeme ->
-        viewModel.deleteLexeme(it)
+        viewModel.setLexemeForDeletion(it)
     }
 
-    LazyColumn(modifier = Modifier.fillMaxSize()){
-        items(words){
-            LexemeOnScreen(lexeme = it, callBack)
+    Surface {
+        LazyColumn(modifier = Modifier.fillMaxSize()){
+            items(words){
+                LexemeOnScreen(lexeme = it, callBack)
+            }
         }
+        ConfirmLexemeDeletion(viewModel = viewModel)
     }
 }
 
@@ -45,7 +52,7 @@ fun LexemeOnScreen(lexeme: Lexeme, callBack: (Lexeme) -> Unit){
         modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)
-            .combinedClickable (
+            .combinedClickable(
                 onClick = {
 
                 },
@@ -54,7 +61,9 @@ fun LexemeOnScreen(lexeme: Lexeme, callBack: (Lexeme) -> Unit){
                 }
             )
     ){
-        Column(modifier = Modifier.fillMaxWidth().padding(8.dp)){
+        Column(modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp)){
             Row(horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()){
                 Text(lexeme.englishWord)
                 Text(lexeme.foreignWord)
@@ -78,4 +87,46 @@ fun PreviewLexeme(){
     }
 
     LexemeOnScreen(lexeme = lexeme, {})
+}
+
+@Composable
+fun ConfirmLexemeDeletion(viewModel: MainViewModel){
+
+    if (viewModel.lexemeToBeDeleted == null)
+        return
+
+    Dialog(onDismissRequest = {
+        viewModel.setLexemeForDeletion(null)
+    }
+    ) {
+        ElevatedCard(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp)
+        ){
+            Column {
+                Text("Really delete this?")
+                viewModel.lexemeToBeDeleted?.let {
+                    LexemeOnScreen(lexeme = it, callBack = {})
+                }
+                Row(horizontalArrangement = Arrangement.SpaceBetween){
+                    TextButton(onClick = {
+                        viewModel.setLexemeForDeletion(null)
+                    }) {
+                        Text("no")
+                    }
+                    TextButton(onClick = {
+                        viewModel.lexemeToBeDeleted?.let {  viewModel.deleteLexeme(it) }
+                        viewModel.setLexemeForDeletion(null)
+
+                    }) {
+                        Text("Yes")
+                    }
+
+                }
+
+            }
+        }
+
+    }
 }

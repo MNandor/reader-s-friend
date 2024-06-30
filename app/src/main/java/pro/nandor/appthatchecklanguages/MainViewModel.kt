@@ -1,5 +1,6 @@
 package pro.nandor.appthatchecklanguages
 
+import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -76,5 +77,12 @@ class MainViewModel: ViewModel() {
             }
         }
     }
+
+    fun setLexemeForDeletion(lexeme: Lexeme?){
+        lexemeToBeDeleted = lexeme
+    }
+
+    var lexemeToBeDeleted:Lexeme? by mutableStateOf(null)
+        private set
 
 }

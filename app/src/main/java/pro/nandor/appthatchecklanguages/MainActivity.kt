@@ -214,7 +214,14 @@ fun AddPopup(viewModel: MainViewModel, word: String){
                 TextField(value = customTranslation, onValueChange = {customTranslation = it}, placeholder = {Text("Translation...", modifier = Modifier.alpha(0.25f))})
 
                 Spacer(modifier = Modifier.height(32.dp))
-                Button(onClick = {}, modifier = Modifier.fillMaxWidth()){
+                Button(onClick = {
+                     viewModel.saveWord(
+                         language = "german",
+                         foreignWord = customWord,
+                         englishWord = customTranslation,
+                         foreignContext = customContextSentence
+                     )
+                }, modifier = Modifier.fillMaxWidth()){
                     Text("Save!")
                 }
 

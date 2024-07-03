@@ -31,7 +31,7 @@ import pro.nandor.appthatchecklanguages.MainViewModel
 
 @Composable
 fun ListOfPastWords(viewModel: MainViewModel){
-    val words by viewModel.words.collectAsState()
+    val words by viewModel.wordsOfThisLang
 
     val callBack:(Lexeme) -> Unit = {it:Lexeme ->
         viewModel.setLexemeForDeletion(it)

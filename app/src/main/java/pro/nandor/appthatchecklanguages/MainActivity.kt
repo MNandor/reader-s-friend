@@ -6,6 +6,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -97,8 +98,24 @@ fun Greeting(name: String, viewModel: MainViewModel) {
     if (selectedTab >= tabs.size)
         selectedTab = 0
 
+
+    val allWords by viewModel.words
+    val ourwords by viewModel.wordsOfThisLang
+    val recentWords by viewModel.recentWords
+    val recentWordsOfThisLang by viewModel.recentWordsOfThisLang
+
+    val switchLanguageCallback = {viewModel.showLanguageSelectorDialog(true)}
+    val data = TopbarData(
+        viewModel.selectedLanguage,
+        recentWordsOfThisLang.size,
+        recentWords.size,
+        ourwords.size,
+        allWords.size
+    )
+
     Surface {
-        Column() {
+        Column {
+            TopBar(data = data, onLanguageButtonClicked = switchLanguageCallback)
             ScrollableTabRow(selectedTabIndex = selectedTab) {
                 tabs.forEachIndexed { index, title ->
                     Tab(text = { Text(title) },
@@ -134,9 +151,6 @@ fun Greeting(name: String, viewModel: MainViewModel) {
                         job?.cancel()
                         job = coroutineScope.launch {
                             delay(1000) // Delay for 1 second
-//                            navigator2.loadUrl("https://tatoeba.org/en/sentences/search?from=deu&query=$word&to=eng")
-//                            navigator4.loadUrl("https://verben.org/konjugation/$word")
-//                            navigator5.loadUrl("https://www.deepl.com/en/translator#de/en/$word")
                             viewModel.setWordForWebsiteSearch(word)
                         }
                     },
@@ -307,4 +321,35 @@ fun OneWebsiteTab(viewModel: MainViewModel, website: Website, visible: Boolean){
     WebView(state = state, navigator = navigator,
         modifier = if (visible) visibleModifier else invisibleModifier,
         onCreated = { it.settings.javaScriptEnabled = true })
+}
+
+data class TopbarData(
+    val currentLanguage: String,
+    val addedTodayThisLanguage: Int,
+    val addedTodayAllLanguages: Int,
+    val nonexportedThisLanguage: Int,
+    val nonexportedAllLanguages: Int
+)
+@Composable
+fun TopBar(data: TopbarData, onLanguageButtonClicked: () -> Unit){
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ){
+        TextButton(onClick = { onLanguageButtonClicked()}) {
+            Text(data.currentLanguage)
+            
+        }
+        Text("Today: ${data.addedTodayThisLanguage}/${data.addedTodayAllLanguages}")
+        Text("Total: ${data.nonexportedThisLanguage}/${data.nonexportedAllLanguages}")
+    }
+}
+
+@Preview
+@Composable
+fun SampleTopBar(){
+    val data = TopbarData("German", 10, 15, 100, 150)
+
+    TopBar(data, {})
 }

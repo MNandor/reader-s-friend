@@ -9,7 +9,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import io.realm.kotlin.ext.query
 import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.filter
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
@@ -53,14 +56,39 @@ class MainViewModel: ViewModel() {
 
     }
 
-    val words = realm
+    private val _words = realm
         .query<Lexeme>()
         .asFlow()
         .map { results ->
             results.list.toList()
         }
-        .stateIn(viewModelScope, SharingStarted.WhileSubscribed(), emptyList()
-        )
+        .onEach {
+            // todo here we convert from Flow to State
+            // this is mostly because I found it easy to work with derivedStateOf
+            // but this is probably not best practice
+            words.value = it
+        }.launchIn(viewModelScope)
+    val words = mutableStateOf(listOf<Lexeme>())
+
+    val wordsOfThisLang = derivedStateOf{
+        words.value.filter { it.language == selectedLanguage }
+    }
+    private val SECONDS_IN_DAY = 24*60*60
+
+    val recentWordsOfThisLang = derivedStateOf {
+        val now = System.currentTimeMillis()/1000
+        wordsOfThisLang.value.filter {
+            (now - it.id.timestamp) < SECONDS_IN_DAY
+        }
+    }
+
+    val recentWords = derivedStateOf {
+
+        val now = System.currentTimeMillis()/1000
+        words.value.filter {
+            (now - it.id.timestamp) < SECONDS_IN_DAY
+        }
+    }
 
     var source by mutableStateOf("")
         private set

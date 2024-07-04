@@ -192,7 +192,7 @@ fun AddPopup(viewModel: MainViewModel, word: String){
     val clipboardManager = LocalClipboardManager.current
     val clipboardText = clipboardManager.getText()?.text
 
-    val highlightedText = if (clipboardText?.contains(word, ignoreCase = true) == true && word.isNotEmpty()) clipboardText.replace(word.toRegex(RegexOption.IGNORE_CASE), {"<b>${it.value}</b>"}) else null
+    val highlightedText = clipboardText?.let { Util.suggestHighlightedWord(it, word) }
 
     var radioSelection by remember{ mutableStateOf(2) }
 

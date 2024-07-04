@@ -28,6 +28,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import pro.nandor.appthatchecklanguages.Lexeme
 import pro.nandor.appthatchecklanguages.MainViewModel
+import pro.nandor.appthatchecklanguages.TextThatHighlights
 
 @Composable
 fun ListOfPastWords(viewModel: MainViewModel){
@@ -72,7 +73,7 @@ fun LexemeOnScreen(lexeme: Lexeme, callBack: (Lexeme) -> Unit){
                 Text(lexeme.foreignWord)
             }
             Spacer(modifier = Modifier.height(8.dp))
-            Text(lexeme.foreignContext)
+            TextThatHighlights(lexeme.foreignContext)
         }
     }
 

@@ -233,7 +233,7 @@ fun AddPopup(viewModel: MainViewModel, word: String){
                         verticalAlignment = Alignment.CenterVertically
                     ){
                         RadioButton(selected = radioSelection == 1, onClick = { radioSelection = 1 })
-                        Text(highlightedText)
+                        TextThatHighlights(highlightedText)
                     }
                 Row(
                     verticalAlignment = Alignment.CenterVertically

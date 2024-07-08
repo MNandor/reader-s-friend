@@ -151,4 +151,14 @@ class MainViewModel: ViewModel() {
         wordThatWebsitesShouldSearchFor = word
     }
 
+    enum class DialogShown {
+        NONE, CLOZE, CSV
+    }
+
+    var dialogShown by mutableStateOf(DialogShown.NONE)
+        private set
+
+    fun showDialog(dialogToShow: DialogShown){
+        dialogShown = dialogToShow
+    }
 }

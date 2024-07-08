@@ -4,7 +4,7 @@ import org.junit.Test
 
 import org.junit.Assert.*
 
-class UtilTest {
+class SuggestHighlightedWordTest {
     private val tag = object {
         val left: String = "<b>"
         val right: String = "</b>"

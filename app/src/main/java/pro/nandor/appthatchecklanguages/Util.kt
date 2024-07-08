@@ -1,5 +1,7 @@
 package pro.nandor.appthatchecklanguages
 
+import java.lang.StringBuilder
+
 object Util {
     private val tag = object {
         val left: String = "<b>"
@@ -44,5 +46,40 @@ object Util {
 
 
         return null
+    }
+
+    sealed interface ExportFormat{
+
+        object Cloze: ExportFormat
+        data class CSV(val separator: String = "\t"): ExportFormat
+    }
+    fun toExportableLine(lexeme: Lexeme, exportFormat:ExportFormat = ExportFormat.Cloze):String{
+
+        when(exportFormat){
+            is ExportFormat.Cloze -> {
+                val baseSentence = lexeme.foreignContext
+                val exportable = baseSentence.replace(tag.left, "{{c1::").replace(tag.right, "}}")
+
+                return exportable
+            }
+            is ExportFormat.CSV -> {
+                val formatted = "${lexeme.englishWord}${exportFormat.separator}${lexeme.foreignWord}${exportFormat.separator}${lexeme.foreignContext}"
+
+                return formatted
+
+            }
+        }
+        return ""
+    }
+
+    fun exportAllLines(lexemes: List<Lexeme>, format: ExportFormat = ExportFormat.Cloze):String{
+        val stringBuilder = StringBuilder()
+
+        for (lexeme in lexemes){
+            stringBuilder.append(toExportableLine(lexeme, format))
+            stringBuilder.append("\n")
+        }
+
+        return stringBuilder.toString()
     }
 }

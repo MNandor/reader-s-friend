@@ -94,7 +94,7 @@ fun LexemeOnScreen(lexeme: Lexeme, callBack: (Lexeme) -> Unit){
         Column(modifier = Modifier
             .fillMaxWidth()
             .padding(8.dp)){
-            Text(lexeme.language, fontSize = 8.sp, modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center)
+            Text(lexeme.language+"${lexeme.exportTimeStamp}", fontSize = 8.sp, modifier = Modifier.fillMaxWidth(), textAlign = TextAlign.Center)
             Row(horizontalArrangement = Arrangement.SpaceBetween, modifier = Modifier.fillMaxWidth()){
                 Text(lexeme.englishWord)
                 Text(lexeme.foreignWord)

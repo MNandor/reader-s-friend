@@ -167,13 +167,20 @@ class MainViewModel: ViewModel() {
 
     fun exportText(){
         viewModelScope.launch {
+
+            val now = (System.currentTimeMillis()/1000).toInt()
+
+            val unexportedWords = wordsOfThisLang.value.filter {
+                it.exportTimeStamp == 0
+            }
+
             val textToShow = if (dialogShown == DialogShown.CLOZE)
-                Util.exportAllLines(wordsOfThisLang.value, Util.ExportFormat.Cloze)
+                Util.exportAllLines(unexportedWords, Util.ExportFormat.Cloze)
             else if (dialogShown == DialogShown.CSV)
-                Util.exportAllLines(wordsOfThisLang.value, Util.ExportFormat.CSV("\t"))
+                Util.exportAllLines(unexportedWords, Util.ExportFormat.CSV("\t"))
             else return@launch
 
-            val fileName = "rf-$selectedLanguage-{System.currentTimeMillis()}.txt"
+            val fileName = "rf-$selectedLanguage-${now}.txt"
 
 
             val targetDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
@@ -181,6 +188,14 @@ class MainViewModel: ViewModel() {
             val file= File(targetDir.absolutePath+"/"+fileName)
 
             file.writeText(textToShow)
+
+            realm.write {
+                for (lexeme in unexportedWords){
+                    val editableLexeme = findLatest(lexeme)
+                    editableLexeme?.exportTimeStamp = now
+                }
+
+            }
 
         }
 

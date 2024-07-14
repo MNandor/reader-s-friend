@@ -1,5 +1,6 @@
 package pro.nandor.appthatchecklanguages.tabs
 
+import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
@@ -24,6 +25,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -162,6 +164,7 @@ fun ConfirmLexemeDeletion(viewModel: MainViewModel){
 
 @Composable
 fun ExportDialog(viewModel: MainViewModel) {
+    val context = LocalContext.current
     if (viewModel.dialogShown == MainViewModel.DialogShown.NONE)
         return
 
@@ -186,6 +189,13 @@ fun ExportDialog(viewModel: MainViewModel) {
                 else "ERROR"
                 Text("Exportable")
                 TextField(value = textToShow, onValueChange = {}, modifier = Modifier.height(400.dp))
+                Button(onClick = {
+                    viewModel.exportText()
+                    Toast.makeText(context, "Exported to Downloads", Toast.LENGTH_SHORT).show()
+
+                }){
+                    Text("Export to File")
+                }
 
             }
         }

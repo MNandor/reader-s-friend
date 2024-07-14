@@ -1,5 +1,7 @@
 package pro.nandor.appthatchecklanguages
 
+import android.os.Environment
+import android.widget.Toast
 import androidx.compose.runtime.State
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
@@ -15,6 +17,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import java.io.File
 
 class MainViewModel: ViewModel() {
 
@@ -160,5 +163,26 @@ class MainViewModel: ViewModel() {
 
     fun showDialog(dialogToShow: DialogShown){
         dialogShown = dialogToShow
+    }
+
+    fun exportText(){
+        viewModelScope.launch {
+            val textToShow = if (dialogShown == DialogShown.CLOZE)
+                Util.exportAllLines(wordsOfThisLang.value, Util.ExportFormat.Cloze)
+            else if (dialogShown == DialogShown.CSV)
+                Util.exportAllLines(wordsOfThisLang.value, Util.ExportFormat.CSV("\t"))
+            else return@launch
+
+            val fileName = "rf-$selectedLanguage-{System.currentTimeMillis()}.txt"
+
+
+            val targetDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)
+
+            val file= File(targetDir.absolutePath+"/"+fileName)
+
+            file.writeText(textToShow)
+
+        }
+
     }
 }

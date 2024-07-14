@@ -25,6 +25,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -89,6 +90,9 @@ fun LexemeOnScreen(lexeme: Lexeme, callBack: (Lexeme) -> Unit){
                 onLongClick = {
                     callBack(lexeme)
                 }
+            )
+            .alpha(
+                if (lexeme.exportTimeStamp == 0) 1.0f else 0.7f
             )
     ){
         Column(modifier = Modifier

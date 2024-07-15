@@ -133,7 +133,11 @@ class MainViewModel: ViewModel() {
 
         Website("Wiktionary", "Romanian", "https://en.wiktionary.org/wiki/<<word>>#Romanian", true, "https://en.wiktionary.org/wiki/Wiktionary:Main_Page"),
         Website("Tatoeba", "Romanian", "https://tatoeba.org/en/sentences/search?from=ron&query=<<word>>&to=eng", true, "https://tatoeba.org/en/sentences/search?from=ron&query=&to=eng"),
-        Website("Dexonline", "Romanian", "https://dexonline.ro/definitie/<<word>>", true, "https://dexonline.ro/")
+        Website("Dexonline", "Romanian", "https://dexonline.ro/definitie/<<word>>", true, "https://dexonline.ro/"),
+
+        Website("Glosbe", "Swedish", "https://en.glosbe.com/sv/en/<<word>>", true, "https://en.glosbe.com"),
+        Website("Tatoeba", "Swedish", "https://tatoeba.org/en/sentences/search?from=swe&query=<<word>>&to=eng", true, "https://tatoeba.org/en/sentences/search?from=swe&query=&to=eng"),
+        Website("Svenska", "Swedish", "https://svenska.se/tre/?sok=<<word>>", true, "https://svenska.se/"),
     )
 
     var selectedLanguage by mutableStateOf("German")

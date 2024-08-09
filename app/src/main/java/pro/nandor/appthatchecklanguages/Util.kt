@@ -44,8 +44,52 @@ object Util {
             return newSentence
         }
 
+        // as a last resort, we use a LCD algorithm
+        val anyWordRegex = "\\b\\p{L}+\\b".toRegex()
 
-        return null
+        // note: we use \\p{L}
+        // instead of \\w
+        // to support foreign-language characters
+
+        val allSentenceWords = anyWordRegex.findAll(sentence)
+
+        val lcsResults = allSentenceWords.associate { it to longestCommonSubsequence(it.value, word) }
+
+        val (bestMatch, bestMatchStrength) = lcsResults.maxBy { it.value }
+
+        if (bestMatchStrength > 3){
+            val wordInSentence = _sentence.substring(bestMatch.range)
+            val newSentence = _sentence.replaceRange(bestMatch.range, "${tag.left}$wordInSentence${tag.right}")
+
+            return newSentence
+        }
+
+        return  null
+    }
+
+    fun longestCommonSubsequence(text1: String, text2: String): Int {
+        val m = text1.length
+        val n = text2.length
+
+        // safeguard for computations taking too long
+        if (n*m>400) return 0
+
+        // Create a 2D array to store lengths of longest common subsequence.
+        val dp = Array(m + 1) { IntArray(n + 1) }
+
+        // Build the dp array from bottom up.
+        for (i in 1..m) {
+            for (j in 1..n) {
+                if (text1[i - 1] == text2[j - 1]) {
+                    dp[i][j] = dp[i - 1][j - 1] + 1
+                } else {
+                    dp[i][j] = maxOf(dp[i - 1][j], dp[i][j - 1])
+                }
+            }
+        }
+
+        // The length of the longest common subsequence will be in dp[m][n].
+        return dp[m][n]
     }
 
     sealed interface ExportFormat{

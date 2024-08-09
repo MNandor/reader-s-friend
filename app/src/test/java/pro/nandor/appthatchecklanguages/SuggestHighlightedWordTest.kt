@@ -87,4 +87,35 @@ class SuggestHighlightedWordTest {
 
         assertEquals(expected, res)
     }
+
+    @Test
+    fun `Picks least dissimilar, non-matching word`(){
+        val sentence = "Sie kritzelt schon wieder."
+        val word = "kritzeln"
+        val res = Util.suggestHighlightedWord(sentence, word)
+        val expected = "Sie ${tag.left}kritzelt${tag.right} schon wieder."
+
+        assertEquals(expected, res)
+    }
+
+    @Test
+    fun `Doesn't freak out if there's unicode in the word`(){
+        val sentence = "Deine hervorragende Arbeit hat mich bloßgestellt."
+        val word = "bloßstellen"
+        val res = Util.suggestHighlightedWord(sentence, word)
+        val expected = "Deine hervorragende Arbeit hat mich ${tag.left}bloßgestellt${tag.right}."
+
+        assertEquals(expected, res)
+    }
+
+    @Test
+    fun `Doesn't freak out if there's a space in the word`(){
+        val sentence = "Nutze deine Faust!"
+        val word = "die Faust"
+        val res = Util.suggestHighlightedWord(sentence, word)
+        val expected = "Nutze deine ${tag.left}Faust${tag.right}!"
+
+        assertEquals(expected, res)
+
+    }
 }

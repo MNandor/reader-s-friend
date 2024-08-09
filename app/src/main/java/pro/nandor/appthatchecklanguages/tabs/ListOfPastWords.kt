@@ -50,7 +50,7 @@ fun ListOfPastWords(viewModel: MainViewModel){
             Row(horizontalArrangement = Arrangement.SpaceAround, modifier = Modifier.fillMaxWidth()){
                 Button(
                     onClick = {
-                        viewModel.showDialog(MainViewModel.DialogShown.CLOZE)
+                        viewModel.showDialog(MainViewModel.DialogShown.CLOZEPLUS)
                     }
                 ){
                     Text("Export Clozes")
@@ -186,11 +186,14 @@ fun ExportDialog(viewModel: MainViewModel) {
                     .fillMaxWidth()
                     .padding(8.dp)
             ){
-                val textToShow = if (viewModel.dialogShown == MainViewModel.DialogShown.CLOZE)
-                    Util.exportAllLines(viewModel.wordsOfThisLang.value, Util.ExportFormat.Cloze)
-                else if (viewModel.dialogShown == MainViewModel.DialogShown.CSV)
-                    Util.exportAllLines(viewModel.wordsOfThisLang.value, Util.ExportFormat.CSV("\t"))
-                else "ERROR"
+                val unexportedWords = viewModel.wordsOfThisLang.value
+                val textToShow = when (viewModel.dialogShown){
+                    MainViewModel.DialogShown.CLOZE -> Util.exportAllLines(unexportedWords, Util.ExportFormat.Cloze)
+                    MainViewModel.DialogShown.CSV -> Util.exportAllLines(unexportedWords, Util.ExportFormat.CSV("\t"))
+                    MainViewModel.DialogShown.CLOZEPLUS -> Util.exportAllLines(unexportedWords, Util.ExportFormat.ClozeTranslationSource())
+                    else -> "ERROR"
+                }
+
                 Text("Exportable")
                 TextField(value = textToShow, onValueChange = {}, modifier = Modifier.height(400.dp))
                 Button(onClick = {

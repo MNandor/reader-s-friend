@@ -256,7 +256,8 @@ fun AddPopup(viewModel: MainViewModel, word: String){
                              1 -> highlightedText
                              2 -> customContextSentence
                              else -> ""
-                         }?:""
+                         }?:"",
+                         source = viewModel.source
 
                      )
                     viewModel.hidePopup()

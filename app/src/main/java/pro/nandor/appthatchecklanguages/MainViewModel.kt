@@ -46,13 +46,15 @@ class MainViewModel: ViewModel() {
         language: String,
         foreignWord: String,
         englishWord: String,
-        foreignContext: String
+        foreignContext: String,
+        source: String
     ){
         val lexeme = Lexeme().apply {
             this.language = language
             this.foreignWord = foreignWord
             this.englishWord = englishWord
             this.foreignContext = foreignContext
+            this.source = source
         }
 
         addWordToRealm(lexeme)
@@ -159,7 +161,7 @@ class MainViewModel: ViewModel() {
     }
 
     enum class DialogShown {
-        NONE, CLOZE, CSV
+        NONE, CLOZE, CSV, CLOZEPLUS
     }
 
     var dialogShown by mutableStateOf(DialogShown.NONE)
@@ -178,11 +180,12 @@ class MainViewModel: ViewModel() {
                 it.exportTimeStamp == 0
             }
 
-            val textToShow = if (dialogShown == DialogShown.CLOZE)
-                Util.exportAllLines(unexportedWords, Util.ExportFormat.Cloze)
-            else if (dialogShown == DialogShown.CSV)
-                Util.exportAllLines(unexportedWords, Util.ExportFormat.CSV("\t"))
-            else return@launch
+            val textToShow = when (dialogShown){
+                DialogShown.CLOZE -> Util.exportAllLines(unexportedWords, Util.ExportFormat.Cloze)
+                DialogShown.CSV -> Util.exportAllLines(unexportedWords, Util.ExportFormat.CSV("\t"))
+                DialogShown.CLOZEPLUS -> Util.exportAllLines(unexportedWords, Util.ExportFormat.ClozeTranslationSource())
+                else -> return@launch
+            }
 
             val fileName = "rf-$selectedLanguage-${now}.txt"
 

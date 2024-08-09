@@ -48,4 +48,10 @@ class ExportLexemeTest {
         assertEquals("Der {{c1::Hund}} springt.\nDie {{c1::Katze}} springt.\n", res)
 
     }
+
+    @Test
+    fun `Exports to cloze with English and Source`(){
+        val res = Util.toExportableLine(lexeme, Util.ExportFormat.ClozeTranslationSource())
+        assertEquals("Der {{c1::Hund}} springt.\tdog\tA nice book", res)
+    }
 }

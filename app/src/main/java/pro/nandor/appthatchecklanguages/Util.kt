@@ -95,9 +95,11 @@ object Util {
     sealed interface ExportFormat{
 
         object Cloze: ExportFormat
+
+        data class ClozeTranslationSource(val separator: String = "\t"): ExportFormat
         data class CSV(val separator: String = "\t"): ExportFormat
     }
-    fun toExportableLine(lexeme: Lexeme, exportFormat:ExportFormat = ExportFormat.Cloze):String{
+    fun toExportableLine(lexeme: Lexeme, exportFormat:ExportFormat = ExportFormat.ClozeTranslationSource()):String{
 
         when(exportFormat){
             is ExportFormat.Cloze -> {
@@ -111,6 +113,14 @@ object Util {
 
                 return formatted
 
+            }
+            is ExportFormat.ClozeTranslationSource -> {
+                val baseSentence = lexeme.foreignContext
+                val exportSentence = baseSentence.replace(tag.left, "{{c1::").replace(tag.right, "}}")
+
+                val exportable = "$exportSentence${exportFormat.separator}${lexeme.englishWord}${exportFormat.separator}${lexeme.source}"
+
+                return exportable
             }
         }
         return ""

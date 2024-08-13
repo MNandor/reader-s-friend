@@ -100,7 +100,16 @@ class MainViewModel: ViewModel() {
 
     fun writeSource(source: String){
         this.source = source
+
+        if (source.endsWith("*"))
+            showSourceAsteriskToggle = true
+
+        showSourceCrementButton = Util.doesSourceContainCrementable(source)
+
     }
+
+    var showSourceCrementButton: Boolean by mutableStateOf(false)
+    var showSourceAsteriskToggle: Boolean by mutableStateOf(false)
 
     fun deleteLexeme(lexeme: Lexeme){
         viewModelScope.launch {
@@ -207,4 +216,6 @@ class MainViewModel: ViewModel() {
         }
 
     }
+
+
 }

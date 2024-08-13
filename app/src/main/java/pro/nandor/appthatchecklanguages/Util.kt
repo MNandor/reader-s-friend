@@ -136,4 +136,10 @@ object Util {
 
         return stringBuilder.toString()
     }
+
+    fun doesSourceContainCrementable(testableString: String): Boolean {
+        val regex = Regex(pattern = "(chapter|ch|episode|e|ep|page|p|pg)\\.? ?(\\d+)", RegexOption.IGNORE_CASE)
+
+        return regex.find(testableString) != null
+    }
 }

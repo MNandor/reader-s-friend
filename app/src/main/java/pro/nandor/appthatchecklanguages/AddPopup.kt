@@ -1,5 +1,6 @@
 package pro.nandor.appthatchecklanguages
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -8,6 +9,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.Checkbox
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -57,6 +59,28 @@ fun AddPopup(viewModel: MainViewModel, word: String){
             Column(modifier = Modifier.padding(16.dp)){
                 Text(viewModel.selectedLanguage)
                 TextField(value = viewModel.source, onValueChange = {viewModel.writeSource(it)}, placeholder = { Text("Source...", modifier = Modifier.alpha(0.25f)) })
+                Row(
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    modifier = Modifier.fillMaxWidth()
+                ){
+                    if (viewModel.showSourceCrementButton){
+                        Row(){
+                            Button(onClick = { /*TODO*/ }) {
+                                Text("-")
+                            }
+                            Button(onClick = { /*TODO*/ }) {
+                                Text("+")
+                            }
+
+                        }
+                    }
+                    if (viewModel.showSourceAsteriskToggle){
+                        Row(){
+                            Checkbox(checked = true, onCheckedChange = {})
+                            Text("*")
+                        }
+                    }
+                }
                 Spacer(modifier = Modifier.height(16.dp))
                 TextField(value = customWord, onValueChange = {customWord = it}, placeholder = { Text("Word...", modifier = Modifier.alpha(0.25f)) })
                 Spacer(modifier = Modifier.height(16.dp))

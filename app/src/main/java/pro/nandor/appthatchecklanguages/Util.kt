@@ -137,9 +137,33 @@ object Util {
         return stringBuilder.toString()
     }
 
+    val crementableRegex = Regex(pattern = "(chapter|ch|episode|e|ep|page|p|pg)\\.? ?(\\d+)", RegexOption.IGNORE_CASE)
     fun doesSourceContainCrementable(testableString: String): Boolean {
-        val regex = Regex(pattern = "(chapter|ch|episode|e|ep|page|p|pg)\\.? ?(\\d+)", RegexOption.IGNORE_CASE)
 
-        return regex.find(testableString) != null
+        return crementableRegex.find(testableString) != null
+    }
+
+    fun bumpCrementable(string:String, goDown:Boolean):String{
+        val matches =  crementableRegex.findAll(string)
+
+        if (matches.count() == 0)
+            return string
+
+        val lastMatch = matches.last()
+
+        val lastMatchNumbers = lastMatch.groups[2] ?: return string
+
+        var theNum = lastMatchNumbers.value.toInt()
+
+        if (goDown){
+            if (theNum > 0){
+                theNum -= 1
+            }
+        }
+        else {
+            theNum += 1
+        }
+
+        return string.replaceRange(lastMatchNumbers.range, theNum.toString())
     }
 }

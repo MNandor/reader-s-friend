@@ -218,4 +218,7 @@ class MainViewModel: ViewModel() {
     }
 
 
+    fun crementSourceNumber(goDown: Boolean){
+        source = Util.bumpCrementable(source, goDown)
+    }
 }

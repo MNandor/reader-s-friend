@@ -31,4 +31,16 @@ class SourceDetectionRegexTest {
 
         }
     }
+
+    @Test
+    fun `Test increment and decrement`(){
+        with(Util){
+            assertEquals("ep.2", bumpCrementable("ep.1", false))
+            assertEquals("eP.2", bumpCrementable("eP.1", false))
+            assertEquals("eP.0", bumpCrementable("eP.1", true))
+            assertEquals("words and eP.0 and more words", bumpCrementable("words and eP.1 and more words", true))
+            assertEquals("episode 16", bumpCrementable("episode 15", false))
+            assertEquals("chapter 3 page 16", bumpCrementable("chapter 3 page 15", false))
+        }
+    }
 }

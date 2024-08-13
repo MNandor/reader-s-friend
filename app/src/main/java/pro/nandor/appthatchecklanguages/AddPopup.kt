@@ -65,10 +65,14 @@ fun AddPopup(viewModel: MainViewModel, word: String){
                 ){
                     if (viewModel.showSourceCrementButton){
                         Row(){
-                            Button(onClick = { /*TODO*/ }) {
+                            Button(onClick = {
+                                viewModel.crementSourceNumber(true)
+                            }) {
                                 Text("-")
                             }
-                            Button(onClick = { /*TODO*/ }) {
+                            Button(onClick = {
+                                viewModel.crementSourceNumber(false)
+                            }) {
                                 Text("+")
                             }
 

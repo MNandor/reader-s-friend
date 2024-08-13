@@ -1,7 +1,19 @@
+import java.io.ByteArrayOutputStream
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("io.realm.kotlin")
+}
+
+fun getGitHash():String {
+    val outputStream = ByteArrayOutputStream()
+    exec{
+        standardOutput = outputStream
+        commandLine("git", "rev-parse", "--short", "HEAD")
+    }
+    val output = outputStream.toString().trim()
+    return output
 }
 
 android {
@@ -19,6 +31,9 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+
+        buildConfigField("String", "GIT_HASH", "\""+getGitHash()+"\"")
+
     }
 
     buildTypes {

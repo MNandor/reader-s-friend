@@ -32,6 +32,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import pro.nandor.appthatchecklanguages.BuildConfig
 import pro.nandor.appthatchecklanguages.Lexeme
 import pro.nandor.appthatchecklanguages.MainViewModel
 import pro.nandor.appthatchecklanguages.TextThatHighlights
@@ -47,6 +48,8 @@ fun ListOfPastWords(viewModel: MainViewModel){
 
     Surface {
         Column (horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.fillMaxWidth()){
+            if (BuildConfig.DEBUG)
+                Text("Git commit hash: ${BuildConfig.GIT_HASH}")
             Row(horizontalArrangement = Arrangement.SpaceAround, modifier = Modifier.fillMaxWidth()){
                 Button(
                     onClick = {

@@ -76,8 +76,13 @@ fun AddPopup(viewModel: MainViewModel, word: String){
                     }
                     if (viewModel.showSourceAsteriskToggle){
                         Row(){
-                            Checkbox(checked = true, onCheckedChange = {})
-                            Text("*")
+                            Checkbox(checked = viewModel.source.endsWith("*"), onCheckedChange = {
+                                if (viewModel.source.endsWith("*"))
+                                    viewModel.writeSource(viewModel.source.dropLast(1))
+                                else
+                                    viewModel.writeSource(viewModel.source+"*")
+                            })
+                            Text("Asterisk")
                         }
                     }
                 }

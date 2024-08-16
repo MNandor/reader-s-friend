@@ -95,6 +95,18 @@ class MainViewModel: ViewModel() {
         }
     }
 
+    val unexportedWords = derivedStateOf {
+        words.value.filter {
+            it.exportTimeStamp == 0
+        }
+    }
+
+    val unexportedWordsOfThisLang = derivedStateOf {
+        wordsOfThisLang.value.filter {
+            it.exportTimeStamp == 0
+        }
+    }
+
     var source by mutableStateOf("")
         private set
 

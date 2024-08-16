@@ -79,7 +79,9 @@ fun AddPopup(viewModel: MainViewModel, word: String){
                         }
                     }
                     if (viewModel.showSourceAsteriskToggle){
-                        Row(){
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically
+                        ){
                             Checkbox(checked = viewModel.source.endsWith("*"), onCheckedChange = {
                                 if (viewModel.source.endsWith("*"))
                                     viewModel.writeSource(viewModel.source.dropLast(1))

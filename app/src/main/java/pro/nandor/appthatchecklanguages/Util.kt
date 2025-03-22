@@ -1,6 +1,9 @@
 package pro.nandor.appthatchecklanguages
 
 import java.lang.StringBuilder
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 object Util {
     private val tag = object {
@@ -165,5 +168,16 @@ object Util {
         }
 
         return string.replaceRange(lastMatchNumbers.range, theNum.toString())
+    }
+
+    fun displayDate(timeStamp: Int):String{
+        if (timeStamp == 0)
+            return "never"
+
+        val date = Date(timeStamp.toLong() * 1000) // Convert to milliseconds
+        val sdformat = SimpleDateFormat("MMMM d", Locale.ENGLISH)
+
+        return sdformat.format(date)
+
     }
 }

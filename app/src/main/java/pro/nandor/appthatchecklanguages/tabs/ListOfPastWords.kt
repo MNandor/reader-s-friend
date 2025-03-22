@@ -143,6 +143,20 @@ fun LexemeOnScreen(lexeme: Lexeme, callBack: (Lexeme) -> Unit){
             }
             Spacer(modifier = Modifier.height(8.dp))
             TextThatHighlights(lexeme.foreignContext)
+            if (lexeme.exportTimeStamp != 0){
+                Spacer(modifier = Modifier.height(8.dp))
+                Row(
+                    horizontalArrangement = Arrangement.Center,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                ){
+                    Text(
+                        "Exported "+Util.displayDate(lexeme.exportTimeStamp),
+                        fontSize = 8.sp
+                    )
+
+                }
+            }
         }
     }
 

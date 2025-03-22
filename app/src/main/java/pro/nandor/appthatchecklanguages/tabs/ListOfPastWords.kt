@@ -3,8 +3,10 @@ package pro.nandor.appthatchecklanguages.tabs
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
@@ -41,6 +43,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.Popup
+import androidx.compose.ui.window.PopupProperties
 import pro.nandor.appthatchecklanguages.BuildConfig
 import pro.nandor.appthatchecklanguages.Lexeme
 import pro.nandor.appthatchecklanguages.MainViewModel
@@ -96,6 +100,24 @@ fun ListOfPastWords(viewModel: MainViewModel){
     }
 }
 
+@Composable
+fun ExplanatoryPopup(dismissCallback: (Unit)-> Unit){
+    Popup(
+        alignment = Alignment.Center,
+        onDismissRequest = { dismissCallback(Unit) },
+        properties = PopupProperties(focusable = true)
+    ) {
+        Box(
+            modifier = Modifier
+                .padding(8.dp)
+                .background(Color.DarkGray)
+                .padding(8.dp)
+        ) {
+            Text("Exports are saved in Download/rf-<timestamp>.txt and can be important by Anki desktop or mobile. As of commit 8f306a2f, previously exported lexemes don't get exported again.")
+        }
+    }
+}
+
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun LexemeOnScreen(lexeme: Lexeme, callBack: (Lexeme) -> Unit){
@@ -131,7 +153,9 @@ fun LexemeOnScreen(lexeme: Lexeme, callBack: (Lexeme) -> Unit){
                     modifier=Modifier.weight(1.0f) // take as much space as the other text
                 )
                 Divider(
-                    modifier=Modifier.fillMaxHeight().width(2.dp),
+                    modifier= Modifier
+                        .fillMaxHeight()
+                        .width(2.dp),
                     thickness = 2.dp,
                     color = Color.Gray
                 )
@@ -246,7 +270,13 @@ fun ExportDialog(viewModel: MainViewModel) {
                     else -> "ERROR"
                 }
 
-                Text("Exportable")
+                Row(){
+                    Text("Exportable")
+                    TextButton(onClick = { viewModel.showExplanatoryPopup(true) }) {
+                        Text("?")
+
+                    }
+                }
                 TextField(value = textToShow, onValueChange = {}, modifier = Modifier.height(400.dp))
                 Button(onClick = {
                     viewModel.exportText()
@@ -258,6 +288,8 @@ fun ExportDialog(viewModel: MainViewModel) {
 
             }
         }
+        if (viewModel.explanatoryPopupVisible)
+            ExplanatoryPopup(dismissCallback = {viewModel.showExplanatoryPopup(false)})
     }
 
 }

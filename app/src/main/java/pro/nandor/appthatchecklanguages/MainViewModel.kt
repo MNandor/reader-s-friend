@@ -233,4 +233,9 @@ class MainViewModel: ViewModel() {
     fun crementSourceNumber(goDown: Boolean){
         source = Util.bumpCrementable(source, goDown)
     }
+
+    var explanatoryPopupVisible: Boolean by mutableStateOf(false)
+    fun showExplanatoryPopup(showIt: Boolean) {
+        explanatoryPopupVisible = showIt
+    }
 }

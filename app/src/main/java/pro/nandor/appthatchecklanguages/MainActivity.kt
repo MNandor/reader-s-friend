@@ -265,7 +265,7 @@ fun TopBar(data: TopbarData, onLanguageButtonClicked: () -> Unit){
         ClickableText(text = AnnotatedString(
             "Today: ${data.addedTodayThisLanguage}/${data.addedTodayAnyLanguage}"),
             onClick = {
-                val wasWere = if (data.addedTodayThisLanguage == 1) "was" else "were"
+                val wasWere = if (data.addedTodayThisLanguage == 1) "lexeme was" else "lexemes were"
                 Toast.makeText(context, "Today, ${data.addedTodayThisLanguage} $wasWere added to ${data.currentLanguage}, and ${data.addedTodayAnyLanguage} to any language.", Toast.LENGTH_SHORT).show()
             },
             style = TextStyle(
@@ -276,7 +276,7 @@ fun TopBar(data: TopbarData, onLanguageButtonClicked: () -> Unit){
         ClickableText(text = AnnotatedString(
             "Total: ${data.addedEverThisLanguage}/${data.addedEverAnyLanguage}"),
             onClick = {
-                val wasWere = if (data.addedEverThisLanguage == 1) "was" else "were"
+                val wasWere = if (data.addedEverThisLanguage == 1) "lexeme was" else "lexemes were"
                 Toast.makeText(context, "${data.addedEverThisLanguage} $wasWere ever added to ${data.currentLanguage}, and ${data.addedEverAnyLanguage} to any language.", Toast.LENGTH_SHORT).show()
             },
             style = TextStyle(
@@ -287,8 +287,8 @@ fun TopBar(data: TopbarData, onLanguageButtonClicked: () -> Unit){
         ClickableText(text = AnnotatedString(
             "Todo: ${data.unexportedThisLanguage}/${data.unexportedAnyLanguage}"),
             onClick = {
-                val wasWere = if (data.unexportedThisLanguage == 1) "was" else "were"
-                Toast.makeText(context, "${data.unexportedThisLanguage} $wasWere not exported from ${data.currentLanguage}, and ${data.unexportedAnyLanguage} from any language.", Toast.LENGTH_SHORT).show()
+                val wasWere = if (data.unexportedThisLanguage == 1) "lexeme was" else "lexemes were"
+                Toast.makeText(context, "${data.unexportedThisLanguage} $wasWere not yet exported from ${data.currentLanguage}, and ${data.unexportedAnyLanguage} from any language.", Toast.LENGTH_SHORT).show()
             },
             style = TextStyle(
                 color = if (isSystemInDarkTheme()) Color.White else Color.Black

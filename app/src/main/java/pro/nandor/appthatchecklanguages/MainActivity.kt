@@ -6,6 +6,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -37,8 +38,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -265,6 +268,9 @@ fun TopBar(data: TopbarData, onLanguageButtonClicked: () -> Unit){
                 val wasWere = if (data.addedTodayThisLanguage == 1) "was" else "were"
                 Toast.makeText(context, "Today, ${data.addedTodayThisLanguage} $wasWere added to ${data.currentLanguage}, and ${data.addedTodayAnyLanguage} to any language.", Toast.LENGTH_SHORT).show()
             },
+            style = TextStyle(
+                color = if (isSystemInDarkTheme()) Color.White else Color.Black
+            ),
 
         )
         ClickableText(text = AnnotatedString(
@@ -273,7 +279,9 @@ fun TopBar(data: TopbarData, onLanguageButtonClicked: () -> Unit){
                 val wasWere = if (data.addedEverThisLanguage == 1) "was" else "were"
                 Toast.makeText(context, "${data.addedEverThisLanguage} $wasWere ever added to ${data.currentLanguage}, and ${data.addedEverAnyLanguage} to any language.", Toast.LENGTH_SHORT).show()
             },
-
+            style = TextStyle(
+                color = if (isSystemInDarkTheme()) Color.White else Color.Black
+            ),
         )
 
         ClickableText(text = AnnotatedString(
@@ -282,8 +290,10 @@ fun TopBar(data: TopbarData, onLanguageButtonClicked: () -> Unit){
                 val wasWere = if (data.unexportedThisLanguage == 1) "was" else "were"
                 Toast.makeText(context, "${data.unexportedThisLanguage} $wasWere not exported from ${data.currentLanguage}, and ${data.unexportedAnyLanguage} from any language.", Toast.LENGTH_SHORT).show()
             },
-
-            )
+            style = TextStyle(
+                color = if (isSystemInDarkTheme()) Color.White else Color.Black
+            ),
+        )
     }
 }
 

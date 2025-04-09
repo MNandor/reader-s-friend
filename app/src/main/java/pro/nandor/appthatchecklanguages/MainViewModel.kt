@@ -161,6 +161,8 @@ class MainViewModel: ViewModel() {
         Website("Glosbe", "Swedish", "https://en.glosbe.com/sv/en/<<word>>", true, "https://en.glosbe.com"),
         Website("Tatoeba", "Swedish", "https://tatoeba.org/en/sentences/search?from=swe&query=<<word>>&to=eng", true, "https://tatoeba.org/en/sentences/search?from=swe&query=&to=eng"),
         Website("Svenska", "Swedish", "https://svenska.se/tre/?sok=<<word>>", true, "https://svenska.se/"),
+
+        Website("Jisho", "Japanese", "https://jisho.org/search/<<word>>", true, "https://jisho.org"),
     )
 
     var selectedLanguage by mutableStateOf("German")
@@ -229,7 +231,6 @@ class MainViewModel: ViewModel() {
 
     }
 
-    // In ViewModel
     var word by mutableStateOf("")
         private set
 

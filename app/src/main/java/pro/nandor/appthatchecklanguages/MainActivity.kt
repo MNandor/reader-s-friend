@@ -209,6 +209,9 @@ fun Greeting(name: String, viewModel: MainViewModel) {
                             },
                             onLongClick = {
                                 // todo this should not be here
+                                // i wonder how many times I have to see this comment until I actually remove it
+                                // it's kinda like me to abuse longClicks.
+                                // the UI is efficient, only nobody outside me will know about it
                                 viewModel.showLanguageSelectorDialog(true)
                             }
                         )

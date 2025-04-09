@@ -118,7 +118,7 @@ fun Greeting(name: String, viewModel: MainViewModel) {
     var job: Job? by remember { mutableStateOf(null) }
 
 
-    var word by remember { mutableStateOf("") }
+    val word = viewModel.word
 
     val tabs = viewModel.filteredWebsites.map { it.displayName } + listOf("History")
 
@@ -184,7 +184,7 @@ fun Greeting(name: String, viewModel: MainViewModel) {
                 TextField(
                     value = word,
                     onValueChange = {
-                        word = it
+                        viewModel.onSearchWordChanged(it)
                         job?.cancel()
                         job = coroutineScope.launch {
                             delay(1000) // Delay for 1 second

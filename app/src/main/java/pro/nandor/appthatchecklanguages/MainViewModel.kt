@@ -229,6 +229,15 @@ class MainViewModel: ViewModel() {
 
     }
 
+    // In ViewModel
+    var word by mutableStateOf("")
+        private set
+
+    fun onSearchWordChanged(newWord: String) {
+        word = newWord
+    }
+
+
 
     fun crementSourceNumber(goDown: Boolean){
         source = Util.bumpCrementable(source, goDown)

@@ -39,6 +39,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
@@ -73,6 +74,12 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+}
+
+@Composable
+fun IsPortrait(): Boolean {
+    val configuration = LocalConfiguration.current
+    return configuration.orientation == android.content.res.Configuration.ORIENTATION_PORTRAIT
 }
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -116,7 +123,9 @@ fun Greeting(name: String, viewModel: MainViewModel) {
 
     Surface {
         Column {
-            TopBar(data = data, onLanguageButtonClicked = switchLanguageCallback)
+            if (IsPortrait()){
+                TopBar(data = data, onLanguageButtonClicked = switchLanguageCallback)
+            }
             ScrollableTabRow(selectedTabIndex = selectedTab) {
                 tabs.forEachIndexed { index, title ->
                     Tab(text = { Text(title) },
@@ -134,7 +143,7 @@ fun Greeting(name: String, viewModel: MainViewModel) {
                 for((index, website) in viewModel.filteredWebsites.withIndex()){
                     OneWebsiteTab(viewModel, website, selectedTab == index )
                 }
-                
+
                 if (selectedTab == tabs.size-1){
                     ListOfPastWords(viewModel = viewModel)
                 }
@@ -260,7 +269,55 @@ fun TopBar(data: TopbarData, onLanguageButtonClicked: () -> Unit){
     ){
         TextButton(onClick = { onLanguageButtonClicked()}) {
             Text(data.currentLanguage)
-            
+
+        }
+        ClickableText(text = AnnotatedString(
+            "Today: ${data.addedTodayThisLanguage}/${data.addedTodayAnyLanguage}"),
+            onClick = {
+                val wasWere = if (data.addedTodayThisLanguage == 1) "lexeme was" else "lexemes were"
+                Toast.makeText(context, "Today, ${data.addedTodayThisLanguage} $wasWere added to ${data.currentLanguage}, and ${data.addedTodayAnyLanguage} to any language.", Toast.LENGTH_SHORT).show()
+            },
+            style = TextStyle(
+                color = if (isSystemInDarkTheme()) Color.White else Color.Black
+            ),
+
+        )
+        ClickableText(text = AnnotatedString(
+            "Total: ${data.addedEverThisLanguage}/${data.addedEverAnyLanguage}"),
+            onClick = {
+                val wasWere = if (data.addedEverThisLanguage == 1) "lexeme was" else "lexemes were"
+                Toast.makeText(context, "${data.addedEverThisLanguage} $wasWere ever added to ${data.currentLanguage}, and ${data.addedEverAnyLanguage} to any language.", Toast.LENGTH_SHORT).show()
+            },
+            style = TextStyle(
+                color = if (isSystemInDarkTheme()) Color.White else Color.Black
+            ),
+        )
+
+        ClickableText(text = AnnotatedString(
+            "Todo: ${data.unexportedThisLanguage}/${data.unexportedAnyLanguage}"),
+            onClick = {
+                val wasWere = if (data.unexportedThisLanguage == 1) "lexeme was" else "lexemes were"
+                Toast.makeText(context, "${data.unexportedThisLanguage} $wasWere not yet exported from ${data.currentLanguage}, and ${data.unexportedAnyLanguage} from any language.", Toast.LENGTH_SHORT).show()
+            },
+            style = TextStyle(
+                color = if (isSystemInDarkTheme()) Color.White else Color.Black
+            ),
+        )
+    }
+}
+
+@Composable
+fun VerticalTopBar(data: TopbarData, onLanguageButtonClicked: () -> Unit){
+    val context = LocalContext.current
+
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        verticalArrangement = Arrangement.SpaceBetween,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ){
+        TextButton(onClick = { onLanguageButtonClicked()}) {
+            Text(data.currentLanguage)
+
         }
         ClickableText(text = AnnotatedString(
             "Today: ${data.addedTodayThisLanguage}/${data.addedTodayAnyLanguage}"),
@@ -303,4 +360,12 @@ fun SampleTopBar(){
     val data = TopbarData("German", 10, 15, 100, 150, 100, 150)
 
     TopBar(data, {})
+}
+
+@Preview
+@Composable
+fun SampleVerticalTopBar(){
+    val data = TopbarData("German", 10, 15, 100, 150, 100, 150)
+
+    VerticalTopBar(data, {})
 }

@@ -188,7 +188,7 @@ fun Greeting(name: String, viewModel: MainViewModel) {
                         job?.cancel()
                         job = coroutineScope.launch {
                             delay(1000) // Delay for 1 second
-                            viewModel.setWordForWebsiteSearch(word)
+                            viewModel.setWordForWebsiteSearch(it)
                         }
                     },
                     modifier = Modifier.weight(1.0f)

@@ -151,7 +151,9 @@ class MainViewModel: ViewModel() {
         Website("Wiktionary", "German", "https://en.wiktionary.org/wiki/<<word>>#German", true, "https://en.wiktionary.org/wiki/Wiktionary:Main_Page"),
         Website("Tatoeba", "German", "https://tatoeba.org/en/sentences/search?from=deu&query=<<word>>&to=eng", true, "https://tatoeba.org/"),
         Website("Artikel", "German", "https://der-artikel.de/", false, "https://der-artikel.de/"),
-        Website("Verben", "German", "https://verben.org/konjugation/<<word>>", true, "https://verben.org/"),
+        Website("Verben.org", "German", "https://verben.org/konjugation/<<word>>", true, "https://verben.org/"),
+        Website("Verben.de", "German", "https://www.verben.de/verben/<<word>>.htm", true, "https://verben.de/"),
+        Website("Reverso Context", "German", "https://context.reverso.net/translation/german-english/<<word>>", true, "https://context.reverso.net/translation/"),
         Website("Deepl", "German", "https://www.deepl.com/en/translator#de/en/<<word>>", true, "https://www.deepl.com/en/translator#de/en/"),
 
         Website("Wiktionary", "Romanian", "https://en.wiktionary.org/wiki/<<word>>#Romanian", true, "https://en.wiktionary.org/wiki/Wiktionary:Main_Page"),
